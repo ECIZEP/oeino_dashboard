@@ -1,0 +1,23 @@
+query getCategory {
+    getCategory {
+        id
+        userId
+        categoryName
+    }
+}
+
+mutation createCategory($categoryName: String!) {
+    createCategory(categoryName: $categoryName) {
+        id
+        userId
+        categoryName
+    }
+}
+
+mutation updateCategory($categoryId: String!, $categoryName: String!) {
+    updateCategory(categoryId: $categoryId, categoryName: $categoryName)
+}
+
+mutation deleteCategory($categoryId: String!) {
+    deleteCategory(categoryId: $categoryId)
+}

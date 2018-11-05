@@ -1,0 +1,17 @@
+query user {
+    user {
+        id
+        wechat
+        nickname
+        weibo
+        googleId
+        githubId
+        nickname
+        avatar
+        email
+        signature
+        intro
+        gender
+        createTime
+    }
+}
