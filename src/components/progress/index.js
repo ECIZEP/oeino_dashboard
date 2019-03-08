@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import linearProgress from 'muse-ui/src/linearProgress/linearProgress';
+// import linearProgress from 'muse-ui/src/linearProgress/index';
 
 const progressConstructor = Vue.extend(linearProgress);
 

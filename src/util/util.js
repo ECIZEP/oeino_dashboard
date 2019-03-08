@@ -1,7 +1,3 @@
-import {
-    CDN_BASE_URL
-} from './constants'
-
 export const serializeParams = (obj) => {
     if (typeof obj !== 'object') {
         throw Error('serializeParams error: must be object');
@@ -44,4 +40,16 @@ export function formatDate(time) {
     result.formatTime = result.year + splitStr + result.month + splitStr + result.day + splitStr + result.hour + splitStr + result.minute + splitStr + result.second;
     result.value = time;
     return result;
+}
+
+// 过滤掉null和undefined值
+export function filterNullAndUndefined(obj) {
+    if (typeof obj === 'object' && !!obj) {
+        Object.keys(obj).forEach(key => {
+            if(!obj[key] && obj[key] !== 0) delete obj[key];
+        })
+        return obj;
+    } else {
+        return false;
+    }
 }

@@ -62,10 +62,8 @@
             }
         },
         created () {
-            getUserInfo().then(res => {
-                if (res && res.data) {
-                    this.user = res.data.user;
-                }
+            getUserInfo().then(({ data }) => {
+                this.user = data.user;
             })
         },
         methods: {

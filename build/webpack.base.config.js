@@ -1,7 +1,14 @@
 const path = require('path');
 const webpack = require('webpack');
 const cleanWebpackPlugin = require('clean-webpack-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+
+const museUiThemePath = path.join(
+    __dirname,
+    '../node_modules',
+    'muse-ui',
+    'src/styles/themes/variables/default.less'
+)
 
 module.exports = {
     mode: "development",
@@ -49,7 +56,14 @@ module.exports = {
                         }
                     },
                     'postcss-loader',
-                    'less-loader'
+                    {
+                        loader: 'less-loader',
+                        options: {
+                            globalVars: {
+                              museUiTheme: `'${museUiThemePath}'`,
+                            }
+                        }
+                    }
                 ]
             },
             {

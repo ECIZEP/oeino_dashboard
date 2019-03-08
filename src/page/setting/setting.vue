@@ -16,7 +16,7 @@
                         <img class="profile_avatar" :src="user.avatar | avatarUrl" alt="头像加载失败">
                         <h3 class="profile_nickname">{{user.nickname}}</h3>
                         <p class="profile_signature">{{user.signature}}</p>
-                        <p class="profile_information">{{user.information}}</p>
+                        <p class="profile_information">{{user.intro}}</p>
                         <div class="profile_actions">
                             <mu-raised-button label="修改头像" @click="$refs.avatar.click()" primary>
                                 <input ref="avatar" @change="inputChange($event, true)" type="file" name="avatar_file" class="upload_input">
@@ -35,7 +35,7 @@
                         <mu-text-field label="username" v-model="user.username" :full-width="true" disabled/>
                         <mu-text-field label="nickname" v-model="user.nickname" :full-width="true" hintText="笔名/昵称/网名" :max-length="20" @textOverflow="textOverflow('nickname')" :errorText="usernameErrorText"/>
                         <mu-text-field label="Signature" v-model="user.signature"  :full-width="true" hintText="个性签名，不超过50个字符" :max-length="50" @textOverflow="textOverflow('signature')" :errorText="signatureErrorText"/>
-                        <mu-text-field label="Personal Information" v-model="user.information" :full-width="true" hintText="个人介绍，不超过200个字符"  multiLine :rows="2" :max-length="200" error-text=""/>
+                        <mu-text-field label="Personal Information" v-model="user.intro" :full-width="true" hintText="个人介绍，不超过200个字符"  multiLine :rows="2" :max-length="200" error-text=""/>
                         <mu-raised-button class="button_save" label="保存" @click="updateProfile" primary/>
                     </div>
                 </div>
@@ -45,13 +45,15 @@
 </template>
 <script>
     import {
-        getUserProfile,
         updateUserProfile
     } from '../../api/user.js';
     import {
+        getUserInfo, updateUser
+    } from '../../graphql/user.js'
+    import {
         formatDate
     } from '../../util/util';
-    import {uploadFile} from '../../util/qiniu';
+    import { uploadFile } from '../../util/qiniu';
 
     export default {
         data () {
@@ -63,10 +65,8 @@
             }
         },
         created () {
-            getUserProfile().then(res => {
-                if (res.data.code === 200) {
-                    this.user = res.data.data;
-                }
+            getUserInfo().then(({ data }) => {
+                this.user = { ...data.user };
             })
         },
         methods: {
@@ -85,7 +85,7 @@
                     });
                     return void 666;
                 }
-                let filename = this.user.username;
+                let filename = this.user.id;
                 if (isAvatar) {
                     this.user.avatar = window.URL.createObjectURL(file);
                     filename += '/profile/avatar/';
@@ -144,26 +144,18 @@
                 this.$router.push('dashboard');
             },
             updateProfile () {
-                let profile = Object.assign({}, this.user);
-                if (profile.changeAvatar) {
-                    profile.avatar = profile.changeAvatar
-                } else {
-                    delete profile.avatar;
+                let profile = {
+                    avatar: !!this.user.changeAvatar ? this.user.changeAvatar : this.user.avatar,
+                    bgUrl: !!this.user.changeBgUrl ? this.user.changeBgUrl : this.user.bgUrl,
+                    nickname: this.user.nickname,
+                    signature: this.user.signature,
+                    intro: this.user.intro
                 }
-                if (profile.changeBgUrl) {
-                    profile.bgUrl = profile.changeBgUrl;
-                } else {
-                    delete profile.bgUrl;
-                }
-                delete profile.changeBgUrl;
-                delete profile.changeAvatar;
-                delete profile.userId;
-                delete profile.username;
 
-                updateUserProfile(this.user.username, profile).then(res => {
-                    if (res.data.code === 200) {
+                updateUser(profile).then(({ data }) => {
+                    if (data.updateUser) {
                         this.$toast({
-                            message: '资料更新成功'
+                            message: '修改成功'
                         })
                     }
                 });

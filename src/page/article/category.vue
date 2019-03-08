@@ -62,7 +62,7 @@
         },
         created() {
             getCategory().then(({ data }) => {
-                this.categoryList = data.getCategory;
+                this.categoryList = JSON.parse(JSON.stringify(data.getCategory));
             })
         },
         methods: {
@@ -113,7 +113,7 @@
                     }
                })
             },
-            categoryAction (type, categoryId, categoryName) {
+            categoryAction (type, categoryId, categoryName, item) {
                 this.dialog.categoryId = categoryId || '';
                 this.dialog.categoryName = categoryName || '';
                 this.dialog.show = true;

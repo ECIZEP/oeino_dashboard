@@ -7,7 +7,7 @@ import {
 
 export function avatarUrl (url) {
     if (!url) return '';
-    if (url.slice(0, 5) === 'blob:') {
+    if (/^(http:|https:|blob:)/.test(url)) {
         return url;
     }
     return CDN_BASE_URL + url + IMAGE_PROCESS_AVATAR;

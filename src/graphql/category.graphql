@@ -15,7 +15,11 @@ mutation createCategory($categoryName: String!) {
 }
 
 mutation updateCategory($categoryId: String!, $categoryName: String!) {
-    updateCategory(categoryId: $categoryId, categoryName: $categoryName)
+    updateCategory(categoryId: $categoryId, categoryName: $categoryName) {
+        id
+        userId
+        categoryName
+    }
 }
 
 mutation deleteCategory($categoryId: String!) {

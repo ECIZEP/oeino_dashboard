@@ -8,10 +8,15 @@ query user {
         githubId
         nickname
         avatar
+        bgUrl
         email
         signature
         intro
         gender
         createTime
     }
+}
+
+mutation updateUser($updateFields: UserInput!) {
+    updateUser(updateFields: $updateFields)
 }
